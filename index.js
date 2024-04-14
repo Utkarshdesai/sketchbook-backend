@@ -3,16 +3,14 @@ const http = require('http')
 const { createServer } = require("http");
 const {Server} = require('socket.io')
 const cors = require('cors')
+
 const app = express();
-app.use(cors())
+const isDev = app.settings.env === 'development'
+const URL = isDev ? 'http://localhost:3000' : 'https://sketchboard-bice.vercel.app'
+app.use(cors({origin: URL}))
 const httpServer = createServer(app);
 
-const io = new Server (httpServer , {
-    cors : {
-        origin: "http://localhost:3000",
-        credentials: true
-    }
-})
+const io = new Server (httpServer , { cors: URL });
 
 io.on('connection' , (socket) => {
    console.log('server is started')
